@@ -22,11 +22,12 @@
 .sidebar__input {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex: 1;
     background-color: #e1e1e1;
     color: grey;
     border-radius: 5px;
+    padding-left: 2px;
 }
 
 .sidebar__input > input {

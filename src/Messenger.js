@@ -1,15 +1,15 @@
 import React from "react";
-import './Messanger.css';
+import './Messenger.css';
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 
-function Messanger() {
+function Messenger() {
     return (
-        <div className="messanger">
+        <div className="messenger">
             <Sidebar/>
             <Chat/>
         </div>
     )
 }
 
-export default Messanger;
+export default Messenger;
