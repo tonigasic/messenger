@@ -60,3 +60,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+.chat__deleteButton {
+    padding: 2px!important;
+}

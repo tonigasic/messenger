@@ -10,14 +10,14 @@
     height: 150px;
 }
 
-.login > button {
+.login > div > button {
     width: 300px;
     background-color: #3ea4fb;
     color: #eff2f5;
     font-weight: 800;
 }
 
-.login > button:hover {
+.login > div > button:hover {
     background-color: gainsboro;
     color: #3ae4fb;
 }

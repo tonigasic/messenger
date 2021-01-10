@@ -34,6 +34,7 @@
     border: none;
     background: transparent;
     outline-width: 0;
+    width: 95%;
 }
 
 .sidebar__chats {

@@ -3,14 +3,17 @@ import './Chat.css';
 import MicNoneIcon from "@material-ui/icons/MicNone";
 import {IconButton} from "@material-ui/core";
 import Message from "./Message";
-import {useSelector} from "react-redux";
-import {selectChatid, selectChatName} from "./features/chatSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {selectChatid, selectChatName, setChat} from "./features/chatSlice";
 import db from "./firebase";
 import firebase from "firebase";
 import {selectUser} from "./features/userSlice";
 import FlipMove from "react-flip-move";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import SendIcon from '@material-ui/icons/Send';
 
 function Chat() {
+    const dispatch = useDispatch();
     const user = useSelector(selectUser)
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
@@ -40,21 +43,43 @@ function Chat() {
 
     const sendMessage = (event) => {
         event.preventDefault();
+        if (chatId) {
+            db
+                .collection('chats')
+                .doc(chatId)
+                .collection('messages')
+                .add({
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    message: message,
+                    uid: user.uid,
+                    photo: user.photo,
+                    email: user.email,
+                    displayName: user.displayName
+                })
 
-        db
-            .collection('chats')
-            .doc(chatId)
-            .collection('messages')
-            .add({
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                message: message,
-                uid: user.uid,
-                photo: user.photo,
-                email: user.email,
-                displayName: user.displayName
-            })
+            setMessage('');
+        }
+    }
 
-        setMessage('');
+    const deleteChat = () => {
+        if (chatId) {
+            db
+                .collection('chats')
+                .doc(chatId)
+                .delete()
+                .then(() => {
+                    dispatch(
+                        setChat(
+                            {
+                                chatId: null,
+                                chatName: null
+                            }
+                        )
+                    )
+                    setMessages([]);
+                    setMessage('');
+                })
+        }
     }
 
     return (
@@ -63,7 +88,9 @@ function Chat() {
                 <h4>
                     To: <span className="chat__name">{chatName}</span>
                 </h4>
-                <strong>Details</strong>
+                <IconButton disabled={!chatId} onClick={deleteChat} variant="outlined" className="chat__deleteButton">
+                    <DeleteForeverIcon />
+                </IconButton>
             </div>
             <div className="chat__messages" ref={chatsRef}>
                 <FlipMove>
@@ -82,8 +109,8 @@ function Chat() {
                     <input disabled={!chatId} onChange={e => setMessage(e.target.value)} value={message} placeholder="Message" type="text"/>
                     <button onClick={sendMessage}>Send Message</button>
                 </form>
-                <IconButton>
-                    <MicNoneIcon/>
+                <IconButton onClick={sendMessage}>
+                    <SendIcon/>
                 </IconButton>
             </div>
         </div>
